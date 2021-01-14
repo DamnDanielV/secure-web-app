@@ -2,7 +2,7 @@
 const express = require('express')
 const app = express()
 
-
+//body parser
 const bodyParser = require('body-parser')
 
 // parse application/x-www-form-urlencoded
@@ -11,39 +11,32 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+//mongoose
+
+const mongoose = require('mongoose')
+
+//rutas
+app.use(require('./routes/users.routes'))
+
 //config file
 require('./config/config')
 
 const port = process.env.PORT
 
-app.get('/user', (req, res) => {
-  res.json('get user')
-})
+const DbUrl = process.env.URLDB
 
-app.post('/user/:id', (req, res) => {
-    let id =  req.params.id
-    let body = req.body;
-    if (body.name === undefined) {
-        res.status(400).json({
-            ok: false,
-            message: "name is neccesary"
-        })
-    } else {
-        res.json({
-            usuario:body,
-            id
-        })
-    }
-})
 
-app.put('/user', (req, res) => {
-    res.json('put user')
-})
-
-app.delete('/user', (req, res) => {
-    res.json('delete user')
+mongoose.connect(DbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex:true
+    
+}, (err, res) => {
+    if (err) throw err;
+    console.log('conexion establecida')
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`listening at http://localhost:${port}`)
 })
