@@ -16,7 +16,7 @@ app.use(bodyParser.json())
 const mongoose = require('mongoose')
 
 //rutas
-app.use(require('./routes/users.routes'))
+app.use(require('./routes/index.routes'))
 
 //config file
 require('./config/config')

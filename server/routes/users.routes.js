@@ -5,9 +5,18 @@ const _ = require('underscore')
 //esquema Usuario
 const Usuario = require('../models/user.model')
 
+//middleware verifica token
+
+const { verifyToken, verifyRole } = require('../middlewares/users.middleware')
+
 const app = express();
 
-app.get('/user', (req, res) => {
+app.get('/user', verifyToken, (req, res) => {
+
+    // return res.json({
+    //     usuario: req.usuario,
+    //     name: req.usuario.name
+    // })
 
     let desde = req.query.desde || 0;
     desde = Number(desde)
@@ -58,7 +67,7 @@ app.post('/user', (req, res) => {
     })
 })
 
-app.put('/user/:id', (req, res) => {
+app.put('/user/:id', [verifyToken, verifyRole], (req, res) => {
     let id = req.params.id; //akjfakhjaabsdjahb pinche errooorrrr media hora en esto!!!!
     let body = req.body;
     body = _.pick(body, 'name', 'email', 'role') // NO SE PODRAN MODIFICAR CAMPOS SENSIBLES POR METODOS PUT
@@ -74,7 +83,7 @@ app.put('/user/:id', (req, res) => {
     })
 })
 
-app.delete('/user/:id', (req, res) => {
+app.delete('/user/:id', [verifyToken, verifyRole], verifyToken, (req, res) => {
 
     Usuario.findByIdAndUpdate(req.params.id, {state: false}, {new: true}, (err, usuUpdated) => {
         if (err) {
