@@ -12,8 +12,17 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 //mongoose
-
 const mongoose = require('mongoose')
+
+
+
+
+//path para archivos estaticos
+const path =  require('path');
+
+//habiitar la carpeta public
+app.use(express.static(path.resolve(__dirname, '../public')))
+
 
 //rutas
 app.use(require('./routes/index.routes'))
